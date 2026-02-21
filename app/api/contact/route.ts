@@ -16,7 +16,10 @@ const contactSchema = z.object({
 export async function POST(request: Request) {
   try {
     const body = await request.json()
+    console.log("Received request body:", body)
+    
     const data = contactSchema.parse(body)
+    console.log("Validated data:", data)
 
     console.log("New contact submission:", {
       name: data.name,
@@ -83,6 +86,9 @@ export async function POST(request: Request) {
     `
 
     // Configure Nodemailer transporter
+    console.log("Configuring email transporter...")
+    console.log("EMAIL_PASSWORD exists:", !!process.env.EMAIL_PASSWORD)
+    
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -99,7 +105,10 @@ export async function POST(request: Request) {
       console.log("✅ Nodemailer transporter verified successfully")
     } catch (verifyError) {
       console.error("❌ Nodemailer transporter verification failed:", verifyError)
-      throw new Error("Email service configuration error")
+      return NextResponse.json(
+        { error: "Email service configuration error. Please check EMAIL_PASSWORD environment variable." },
+        { status: 500 }
+      )
     }
 
     // Email options
@@ -114,6 +123,7 @@ export async function POST(request: Request) {
 
     // Send email
     try {
+      console.log("Attempting to send email...")
       const emailResult = await transporter.sendMail(mailOptions)
       console.log("✅ Email sent successfully:", emailResult.messageId)
       
@@ -125,16 +135,20 @@ export async function POST(request: Request) {
         },
         { status: 200 }
       )
-    } catch (emailError) {
-      console.error("❌ Failed to send email:", emailError)
-      // Still return success to user even if email fails
+    } catch (emailError: any) {
+      console.error("❌ Email sending failed:", emailError)
+      console.error("Error details:", {
+        code: emailError.code,
+        command: emailError.command,
+        response: emailError.response
+      })
+      
       return NextResponse.json(
         { 
-          success: true, 
-          message: "Thank you! We will get back to you soon.",
-          warning: "Email delivery may be delayed"
+          error: "Failed to send email. Please try again later.",
+          details: emailError.message 
         },
-        { status: 200 }
+        { status: 500 }
       )
     }
 
