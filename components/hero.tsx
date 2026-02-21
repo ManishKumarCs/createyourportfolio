@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { ArrowRight, Sparkles, FileCheck } from "lucide-react"
+import { Logo } from "./logo"
 
 const stats = [
   { value: "50+", label: "Portfolios Built" },
@@ -17,17 +18,14 @@ export function Hero() {
       <div className="animate-float pointer-events-none absolute top-20 right-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
       <div className="animate-float-delayed pointer-events-none absolute bottom-20 left-10 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
 
-      <div className="relative mx-auto flex max-w-7xl flex-col items-center px-6 py-32 text-center">
+      <div className="relative mx-auto flex max-w-7xl flex-col items-center px-6 py-32">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2"
+          className="mb-8 flex items-center justify-center"
         >
-          <Sparkles size={14} className="text-primary" />
-          <span className="text-sm text-primary">
-            Portfolios, Resumes & Projects for Students
-          </span>
+          <Logo size="large" />
         </motion.div>
 
         <motion.h1

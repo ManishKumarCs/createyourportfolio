@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
+import { Logo } from "./logo"
 
 const navLinks = [
   { label: "Free Review", href: "#free-services" },
@@ -34,13 +35,8 @@ export function Navbar() {
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <a href="#" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <span className="text-sm font-bold text-primary-foreground">M</span>
-          </div>
-          <span className="font-mono text-lg font-bold text-foreground">
-            Create Your Own Portfolio
-          </span>
+        <a href="#" className="flex items-center">
+          <Logo size="small" />
         </a>
 
         <div className="hidden items-center gap-8 md:flex">
