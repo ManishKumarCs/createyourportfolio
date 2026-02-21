@@ -60,6 +60,10 @@ export async function POST(request: Request) {
               <span style="color: #333; margin-left: 10px;">${data.email}</span>
             </div>
             <div style="margin-bottom: 10px;">
+              <strong style="color: #666;">Phone:</strong>
+              <span style="color: #333; margin-left: 10px;">${data.phone || 'Not provided'}</span>
+            </div>
+            <div style="margin-bottom: 10px;">
               <strong style="color: #666;">Plan:</strong>
               <span style="color: #3b82f6; margin-left: 10px; font-weight: bold;">${data.plan}</span>
             </div>

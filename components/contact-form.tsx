@@ -10,20 +10,76 @@ export function ContactForm() {
   const [status, setStatus] = useState<FormStatus>("idle")
   const [errorMsg, setErrorMsg] = useState("")
   const [sendCount, setSendCount] = useState(0)
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    plan: "",
+    message: ""
+  })
+  const [fieldErrors, setFieldErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    plan: "",
+    message: ""
+  })
+
+  const validateField = (name: string, value: string) => {
+    let error = ""
+    
+    switch (name) {
+      case "name":
+        if (value.length < 2) error = "Name must be at least 2 characters"
+        break
+      case "email":
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = "Invalid email address"
+        break
+      case "phone":
+        if (value && !/^\+?[1-9]\d{1,14}$/.test(value)) error = "Invalid phone number format"
+        break
+      case "plan":
+        if (!value) error = "Please select a plan"
+        break
+      case "message":
+        if (value.length < 10) error = "Message must be at least 10 characters"
+        break
+    }
+    
+    return error
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+    
+    const error = validateField(name, value)
+    setFieldErrors(prev => ({ ...prev, [name]: error }))
+  }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    
+    // Validate all fields before submission
+    const errors = {
+      name: validateField("name", formData.name),
+      email: validateField("email", formData.email),
+      phone: validateField("phone", formData.phone),
+      plan: validateField("plan", formData.plan),
+      message: validateField("message", formData.message)
+    }
+    
+    setFieldErrors(errors)
+    
+    // Check if there are any errors
+    if (Object.values(errors).some(error => error)) {
+      setErrorMsg("Please fix the errors below before submitting.")
+      setStatus("error")
+      return
+    }
+    
     setStatus("loading")
     setErrorMsg("")
-
-    const form = e.currentTarget
-    const formData = {
-      name: (form.elements.namedItem("name") as HTMLInputElement).value,
-      email: (form.elements.namedItem("email") as HTMLInputElement).value,
-      phone: (form.elements.namedItem("phone") as HTMLInputElement).value,
-      plan: (form.elements.namedItem("plan") as HTMLSelectElement).value,
-      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
-    }
 
     try {
       if (sendCount >= 2) {
@@ -53,7 +109,21 @@ export function ContactForm() {
 
       setStatus("success")
       setSendCount(sendCount + 1)
-      form.reset()
+      // Reset form state
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        plan: "",
+        message: ""
+      })
+      setFieldErrors({
+        name: "",
+        email: "",
+        phone: "",
+        plan: "",
+        message: ""
+      })
       console.log('Email sent successfully!')
     } catch (err) {
       console.error('Email sending error:', err)
@@ -164,9 +234,18 @@ export function ContactForm() {
                       name="name"
                       type="text"
                       required
+                      value={formData.name}
+                      onChange={handleInputChange}
                       placeholder="Enter Your Name"
-                      className="w-full rounded-xl border border-border bg-input px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                      className={`w-full rounded-xl border bg-input px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-1 focus:outline-none transition-colors ${
+                        fieldErrors.name 
+                          ? 'border-destructive focus:border-destructive focus:ring-destructive' 
+                          : 'border-border focus:border-primary focus:ring-primary'
+                      }`}
                     />
+                    {fieldErrors.name && (
+                      <p className="mt-1 text-xs text-destructive">{fieldErrors.name}</p>
+                    )}
                   </div>
                   <div>
                     <label
@@ -180,9 +259,18 @@ export function ContactForm() {
                       name="email"
                       type="email"
                       required
+                      value={formData.email}
+                      onChange={handleInputChange}
                       placeholder="developer@example.com"
-                      className="w-full rounded-xl border border-border bg-input px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                      className={`w-full rounded-xl border bg-input px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-1 focus:outline-none transition-colors ${
+                        fieldErrors.email 
+                          ? 'border-destructive focus:border-destructive focus:ring-destructive' 
+                          : 'border-border focus:border-primary focus:ring-primary'
+                      }`}
                     />
+                    {fieldErrors.email && (
+                      <p className="mt-1 text-xs text-destructive">{fieldErrors.email}</p>
+                    )}
                   </div>
                   <div>
                     <label
@@ -195,9 +283,18 @@ export function ContactForm() {
                       id="phone"
                       name="phone"
                       type="tel"
+                      value={formData.phone}
+                      onChange={handleInputChange}
                       placeholder="+1 (555) 123-4567"
-                      className="w-full rounded-xl border border-border bg-input px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                      className={`w-full rounded-xl border bg-input px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-1 focus:outline-none transition-colors ${
+                        fieldErrors.phone 
+                          ? 'border-destructive focus:border-destructive focus:ring-destructive' 
+                          : 'border-border focus:border-primary focus:ring-primary'
+                      }`}
                     />
+                    {fieldErrors.phone && (
+                      <p className="mt-1 text-xs text-destructive">{fieldErrors.phone}</p>
+                    )}
                   </div>
                   <div>
                     <label
@@ -210,7 +307,13 @@ export function ContactForm() {
                       id="plan"
                       name="plan"
                       required
-                      className="w-full rounded-xl border border-border bg-input px-4 py-3 text-sm text-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                      value={formData.plan}
+                      onChange={handleInputChange}
+                      className={`w-full rounded-xl border bg-input px-4 py-3 text-sm text-foreground focus:ring-1 focus:outline-none transition-colors ${
+                        fieldErrors.plan 
+                          ? 'border-destructive focus:border-destructive focus:ring-destructive' 
+                          : 'border-border focus:border-primary focus:ring-primary'
+                      }`}
                     >
                       <option value="">Select a service</option>
                       <optgroup label="Free Services">
@@ -237,6 +340,9 @@ export function ContactForm() {
                         <option value="bundle-elite">Elite Job Seeker - ₹1,999</option>
                       </optgroup>
                     </select>
+                    {fieldErrors.plan && (
+                      <p className="mt-1 text-xs text-destructive">{fieldErrors.plan}</p>
+                    )}
                   </div>
                   <div>
                     <label
@@ -244,15 +350,29 @@ export function ContactForm() {
                       className="mb-1.5 block text-sm font-medium text-foreground"
                     >
                       Your Message
+                      <span className={`ml-2 text-xs ${
+                        formData.message.length < 10 ? 'text-destructive' : 'text-muted-foreground'
+                      }`}>
+                        ({formData.message.length}/10 min chars)
+                      </span>
                     </label>
                     <textarea
                       id="message"
                       name="message"
                       required
                       rows={4}
+                      value={formData.message}
+                      onChange={handleInputChange}
                       placeholder="Tell us about your project..."
-                      className="w-full resize-none rounded-xl border border-border bg-input px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                      className={`w-full resize-none rounded-xl border bg-input px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-1 focus:outline-none transition-colors ${
+                        fieldErrors.message 
+                          ? 'border-destructive focus:border-destructive focus:ring-destructive' 
+                          : 'border-border focus:border-primary focus:ring-primary'
+                      }`}
                     />
+                    {fieldErrors.message && (
+                      <p className="mt-1 text-xs text-destructive">{fieldErrors.message}</p>
+                    )}
                   </div>
                 </div>
 
