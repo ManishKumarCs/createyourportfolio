@@ -5,7 +5,10 @@ import nodemailer from 'nodemailer'
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().optional().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
+  phone: z.string().optional().refine((val) => {
+    if (!val) return true; // Optional field
+    return /^\+?[1-9]\d{1,14}$/.test(val);
+  }, "Invalid phone number format"),
   plan: z.string().min(1, "Please select a plan"),
   message: z.string().min(10, "Message must be at least 10 characters"),
 })
