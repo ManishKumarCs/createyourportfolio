@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="agencyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#agencyGrad)"/>
+  <rect x="50" y="50" width="700" height="400" rx="8" fill="#111827" opacity="0.9"/>
+  <text x="400" y="150" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="32" font-weight="bold">AGENCY</text>
+  <text x="400" y="190" text-anchor="middle" fill="#60a5fa" font-family="sans-serif" font-size="20">Creative Solutions</text>
+  <rect x="100" y="220" width="600" height="3" fill="#3b82f6" opacity="0.6"/>
+  <circle cx="200" cy="300" r="30" fill="#3b82f6" opacity="0.8"/>
+  <circle cx="400" cy="300" r="30" fill="#06b6d4" opacity="0.8"/>
+  <circle cx="600" cy="300" r="30" fill="#3b82f6" opacity="0.8"/>
+</svg>

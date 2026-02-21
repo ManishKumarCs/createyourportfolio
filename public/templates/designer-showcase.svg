@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="designGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899"/>
+      <stop offset="100%" style="stop-color:#3b82f6"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#designGrad)"/>
+  <rect x="50" y="50" width="700" height="400" rx="8" fill="#ffffff" opacity="0.95"/>
+  <rect x="100" y="100" width="200" height="150" rx="4" fill="#f3f4f6"/>
+  <rect x="330" y="100" width="200" height="150" rx="4" fill="#f3f4f6"/>
+  <rect x="560" y="100" width="140" height="150" rx="4" fill="#f3f4f6"/>
+  <rect x="100" y="280" width="600" height="120" rx="4" fill="#f9fafb"/>
+  <text x="400" y="350" text-anchor="middle" fill="#6b7280" font-family="sans-serif" font-size="18">Designer Showcase</text>
+</svg>
