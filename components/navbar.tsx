@@ -39,7 +39,7 @@ export function Navbar() {
             <span className="text-sm font-bold text-primary-foreground">M</span>
           </div>
           <span className="font-mono text-lg font-bold text-foreground">
-            ManishDev
+            Create Your Own Portfolio
           </span>
         </a>
 

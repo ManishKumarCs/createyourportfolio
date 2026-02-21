@@ -5,6 +5,7 @@ import nodemailer from 'nodemailer'
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
+  phone: z.string().optional().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
   plan: z.string().min(1, "Please select a plan"),
   message: z.string().min(10, "Message must be at least 10 characters"),
 })
@@ -17,6 +18,7 @@ export async function POST(request: Request) {
     console.log("New contact submission:", {
       name: data.name,
       email: data.email,
+      phone: data.phone,
       plan: data.plan,
       message: data.message,
       timestamp: new Date().toISOString(),
@@ -24,17 +26,18 @@ export async function POST(request: Request) {
 
     // Create email content with all form data
     const emailContent = `
-      New Portfolio Generator Contact Form Submission
+      New Contact Form Submission
       
       📋 Contact Information:
-      • Name: ${data.name}
-      • Email: ${data.email}
-      • Plan: ${data.plan}
-      • Message: ${data.message}
+      Name: ${data.name}
+      Email: ${data.email}
+      Phone: ${data.phone || 'Not provided'}
+      Plan: ${data.plan}
+      Message: ${data.message}
       
       📅 Submitted: ${new Date().toLocaleString()}
       
-      🎯 Action Required: Please respond to this inquiry about ${data.plan}
+      🎯 Please respond to this inquiry about ${data.plan}
     `
 
     // Create HTML email template
@@ -94,9 +97,9 @@ export async function POST(request: Request) {
 
     // Email options
     const mailOptions = {
-      from: 'Portfolio Generator <manishprajapati.cs1@gmail.com>',
+      from: 'Create Your Portfolio <manishprajapati.cs1@gmail.com>',
       to: 'manishprajapati.cs1@gmail.com',
-      replyTo: data.email,
+      replyTo: data.email as string,
       subject: `🎯 New Portfolio Inquiry - ${data.plan} - ${data.name}`,
       text: emailContent,
       html: htmlContent,
